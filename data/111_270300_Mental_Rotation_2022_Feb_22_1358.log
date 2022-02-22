@@ -1,0 +1,11 @@
+3.5716 	WARNING 	We strongly recommend you activate the PTB sound engine in PsychoPy prefs as the preferred audio engine. Its timing is vastly superior. Your prefs are currently set to use ['sounddevice', 'PTB', 'pyo', 'pygame'] (in that order).
+10.9698 	EXP 	Created window1 = Window(allowGUI=False, allowStencil=False, autoLog=True, backendConf=UNKNOWN, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000023E2BEB2668>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x0000023E2BE19A90>, multiSample=False, name='window1', numSamples=2, pos=[0.0, 0.0], screen=0, size=array([3440, 1440]), stencilBits=0, stereo=False, units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+10.9703 	EXP 	window1: mouseVisible = True
+10.9704 	EXP 	window1: recordFrameIntervals = False
+11.2193 	EXP 	window1: recordFrameIntervals = True
+11.4947 	EXP 	window1: recordFrameIntervals = False
+12.2996 	EXP 	Created instr_2D = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, flipHoriz=False, flipVert=False, image='Stimuli_2D/instructions/instructions.png', interpolate=True, mask=None, maskParams=None, name='instr_2D', opacity=1, ori=0.0, pos=array([0., 0.]), size=array([0.5, 0.5]), texRes=128.0, units='pix', win=Window(...))
+12.4694 	EXP 	instr_2D: autoDraw = True
+26.3329 	DATA 	Keypress: space
+26.3536 	EXP 	instr_2D: autoDraw = False
+26.4307 	EXP 	window1: mouseVisible = True
