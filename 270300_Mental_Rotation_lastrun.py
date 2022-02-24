@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 22, 2022, at 20:36
+    on Februar 24, 2022, at 09:29
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -102,7 +102,7 @@ fix_point = visual.ShapeStim(
     size=(10, 10), vertices='circle',
     ori=0.0, pos=(0, 0),
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
-    opacity=None, depth=0.0, interpolate=True)
+    opacity=None, depth=-1.0, interpolate=True)
 fix_point_ISI = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='fix_point_ISI')
 
 # Initialize components for Routine "trial_2D"
@@ -110,13 +110,9 @@ trial_2DClock = core.Clock()
 # Importieren der relevanten / benötigten Libraries
 import random # für Zugriff auf die random- und shuffle-Methode
 
-# Anlegen eines Trial-Index, um verfolgen zu können, in welchem Trial man sich gerade befindet
-# (Dies ist ein Workaround, da lt. Foren trials.thisN oder trials.trialsThisN nicht richtig funktioniert;
-# diese Erfahrung habe ich auch im Seminar schon gemacht)
-trial_index = 0
-
 # Erstellen der Liste mit den Bild-Indices
-# Da die Bilder von 1-15 durchnummeriert sind, wird eine Liste mit entsprechenden Integern angelegt
+# Da die Bilder von 1-15 durchnummeriert sind (z.B. correct1.png), wird eine Liste mit 
+# entsprechenden Integern angelegt
 img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 # Randomisierung der Liste mit den Bild-Indices
@@ -125,6 +121,9 @@ img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 # da die img_index-Liste vorher geshuffelt wurde
 random.shuffle(img_index)
 
+trial_2D_mouse = event.Mouse(win=win)
+x, y = [None, None]
+trial_2D_mouse.mouseClock = core.Clock()
 img_correct = visual.ImageStim(
     win=win,
     name='img_correct', units='pix', 
@@ -132,7 +131,7 @@ img_correct = visual.ImageStim(
     ori=0.0, pos=[0,0], size=(300, 278),
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-1.0)
+    texRes=128.0, interpolate=True, depth=-2.0)
 img_target = visual.ImageStim(
     win=win,
     name='img_target', units='pix', 
@@ -140,7 +139,7 @@ img_target = visual.ImageStim(
     ori=0.0, pos=[0,0], size=(300, 278),
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-2.0)
+    texRes=128.0, interpolate=True, depth=-3.0)
 img_wrong = visual.ImageStim(
     win=win,
     name='img_wrong', units='pix', 
@@ -148,7 +147,7 @@ img_wrong = visual.ImageStim(
     ori=0.0, pos=[0,0], size=(300, 278),
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
-    texRes=128.0, interpolate=True, depth=-3.0)
+    texRes=128.0, interpolate=True, depth=-4.0)
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
@@ -273,6 +272,12 @@ for thisTrials_2D in trials_2D:
     continueRoutine = True
     routineTimer.add(1.000000)
     # update component parameters for each repeat
+    # Logging der Pfade der verwendeten Bilddateien
+    # Diese Variablen werden in die Experimental-csv-Daatei geschrieben und
+    # als Pfad für die image-Stimuli verwendet
+    img_correct_path = 'Stimuli_2d/correct' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des korrekten 2D-Bildes
+    img_wrong_path = 'Stimuli_2d/wrong' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des falschen 2D-Bildes
+    img_target_path = 'Stimuli_2d/target' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des Target-Bildes
     # keep track of which components have finished
     ITI_Fixation_2DComponents = [fix_point, fix_point_ISI]
     for thisComponent in ITI_Fixation_2DComponents:
@@ -323,7 +328,7 @@ for thisTrials_2D in trials_2D:
             fix_point_ISI.start(1)
         elif fix_point_ISI.status == STARTED:  # one frame should pass before updating params and completing
             # updating other components during *fix_point_ISI*
-            img_correct.setImage('Stimuli_2d/correct' + str(img_index[trials_2D.thisN]) + '.png')
+            img_correct.setImage(img_correct_path)
             img_target.setImage('Stimuli_2d/target' + str(img_index[trials_2D.thisN]) + '.png')
             img_wrong.setImage('Stimuli_2d/wrong' + str(img_index[trials_2D.thisN]) + '.png')
             # component updates done
@@ -360,17 +365,34 @@ for thisTrials_2D in trials_2D:
     continueRoutine = True
     routineTimer.add(10.000000)
     # update component parameters for each repeat
-    trial_index += 1
-    
+    # Festlegen der x-Position der Correct- und 
+    # Wrong-Stimuli / Bilder
+    # x_pos_correct wird bei dem Bildstimulus
+    # img_correct, -x_pos_correct bei dem 
+    # Bildstimulus img_wrong unter Position als x-Koordinate
+    # verwendet. Der Wert 250 ist arbiträr gewählt, die
+    # Anordnung der Stimuli ähnelt aber der in der 
+    # Aufgabenstellung vorgegebenen Anordnung.
     if random.random() < 0.5:
         x_pos_correct = -250
     else:
         x_pos_correct = 250
+    # setup some python lists for storing info about the trial_2D_mouse
+    trial_2D_mouse.x = []
+    trial_2D_mouse.y = []
+    trial_2D_mouse.leftButton = []
+    trial_2D_mouse.midButton = []
+    trial_2D_mouse.rightButton = []
+    trial_2D_mouse.time = []
+    trial_2D_mouse.clicked_name = []
+    trial_2D_mouse.clicked_pos = []
+    gotValidClick = False  # until a click is received
+    trial_2D_mouse.mouseClock.reset()
     img_correct.setPos((x_pos_correct, -139))
     img_target.setPos((0, 139))
     img_wrong.setPos((-x_pos_correct, -139))
     # keep track of which components have finished
-    trial_2DComponents = [img_correct, img_target, img_wrong]
+    trial_2DComponents = [trial_2D_mouse, img_correct, img_target, img_wrong]
     for thisComponent in trial_2DComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -392,6 +414,50 @@ for thisTrials_2D in trials_2D:
         tThisFlipGlobal = win.getFutureFlipTime(clock=None)
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
+        # *trial_2D_mouse* updates
+        if trial_2D_mouse.status == NOT_STARTED and t >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            trial_2D_mouse.frameNStart = frameN  # exact frame index
+            trial_2D_mouse.tStart = t  # local t and not account for scr refresh
+            trial_2D_mouse.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(trial_2D_mouse, 'tStartRefresh')  # time at next scr refresh
+            trial_2D_mouse.status = STARTED
+            prevButtonState = trial_2D_mouse.getPressed()  # if button is down already this ISN'T a new click
+        if trial_2D_mouse.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > trial_2D_mouse.tStartRefresh + 10-frameTolerance:
+                # keep track of stop time/frame for later
+                trial_2D_mouse.tStop = t  # not accounting for scr refresh
+                trial_2D_mouse.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(trial_2D_mouse, 'tStopRefresh')  # time at next scr refresh
+                trial_2D_mouse.status = FINISHED
+        if trial_2D_mouse.status == STARTED:  # only update if started and not finished!
+            buttons = trial_2D_mouse.getPressed()
+            if buttons != prevButtonState:  # button state changed?
+                prevButtonState = buttons
+                if sum(buttons) > 0:  # state changed to a new click
+                    # check if the mouse was inside our 'clickable' objects
+                    gotValidClick = False
+                    try:
+                        iter(img_correct)
+                        clickableList = img_correct
+                    except:
+                        clickableList = [img_correct]
+                    for obj in clickableList:
+                        if obj.contains(trial_2D_mouse):
+                            gotValidClick = True
+                            trial_2D_mouse.clicked_name.append(obj.name)
+                            trial_2D_mouse.clicked_pos.append(obj.pos)
+                    x, y = trial_2D_mouse.getPos()
+                    trial_2D_mouse.x.append(x)
+                    trial_2D_mouse.y.append(y)
+                    buttons = trial_2D_mouse.getPressed()
+                    trial_2D_mouse.leftButton.append(buttons[0])
+                    trial_2D_mouse.midButton.append(buttons[1])
+                    trial_2D_mouse.rightButton.append(buttons[2])
+                    trial_2D_mouse.time.append(trial_2D_mouse.mouseClock.getTime())
+                    if gotValidClick:  # abort routine on response
+                        continueRoutine = False
         
         # *img_correct* updates
         if img_correct.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
@@ -465,6 +531,27 @@ for thisTrials_2D in trials_2D:
     for thisComponent in trial_2DComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
+    # Speichern der x-Koordinaten der Stimuli
+    # x_pos_correct = x-Position (pix) der img_correct-Stimuli
+    # x_pos_wrong = x-Position (pix) der img_wrong-Stimuli
+    thisExp.addData('x_pos_correct', x_pos_correct)
+    thisExp.addData('x_pos_wrong', -x_pos_correct)
+    
+    # Speichern der verwendeten Bilddateien
+    thisExp.addData('img_correct', img_correct_path)
+    thisExp.addData('img_wrong', img_wrong_path)
+    thisExp.addData('img_target', img_target_path)
+    # store data for trials_2D (TrialHandler)
+    if len(trial_2D_mouse.x): trials_2D.addData('trial_2D_mouse.x', trial_2D_mouse.x[0])
+    if len(trial_2D_mouse.y): trials_2D.addData('trial_2D_mouse.y', trial_2D_mouse.y[0])
+    if len(trial_2D_mouse.leftButton): trials_2D.addData('trial_2D_mouse.leftButton', trial_2D_mouse.leftButton[0])
+    if len(trial_2D_mouse.midButton): trials_2D.addData('trial_2D_mouse.midButton', trial_2D_mouse.midButton[0])
+    if len(trial_2D_mouse.rightButton): trials_2D.addData('trial_2D_mouse.rightButton', trial_2D_mouse.rightButton[0])
+    if len(trial_2D_mouse.time): trials_2D.addData('trial_2D_mouse.time', trial_2D_mouse.time[0])
+    if len(trial_2D_mouse.clicked_name): trials_2D.addData('trial_2D_mouse.clicked_name', trial_2D_mouse.clicked_name[0])
+    if len(trial_2D_mouse.clicked_pos): trials_2D.addData('trial_2D_mouse.clicked_pos', trial_2D_mouse.clicked_pos[0])
+    trials_2D.addData('trial_2D_mouse.started', trial_2D_mouse.tStart)
+    trials_2D.addData('trial_2D_mouse.stopped', trial_2D_mouse.tStop)
     trials_2D.addData('img_correct.started', img_correct.tStartRefresh)
     trials_2D.addData('img_correct.stopped', img_correct.tStopRefresh)
     trials_2D.addData('img_target.started', img_target.tStartRefresh)

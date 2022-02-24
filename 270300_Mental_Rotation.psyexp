@@ -101,6 +101,23 @@
       </KeyboardComponent>
     </Routine>
     <Routine name="ITI_Fixation_2D">
+      <CodeComponent name="fix_point_code">
+        <Param name="Before Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Before JS Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Begin Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Begin JS Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Begin JS Routine" updates="constant" val="img_correct_path = ((&quot;Stimuli_2d/correct&quot; + img_index[trials_2D.thisN].toString()) + &quot;.png&quot;);&amp;#10;img_wrong_path = ((&quot;Stimuli_2d/wrong&quot; + img_index[trials_2D.thisN].toString()) + &quot;.png&quot;);&amp;#10;img_target_path = ((&quot;Stimuli_2d/target&quot; + img_index[trials_2D.thisN].toString()) + &quot;.png&quot;);&amp;#10;" valType="extendedCode"/>
+        <Param name="Begin Routine" updates="constant" val="# Logging der Pfade der verwendeten Bilddateien&amp;#10;# Diese Variablen werden in die Experimental-csv-Daatei geschrieben und&amp;#10;# als Pfad für die image-Stimuli verwendet&amp;#10;img_correct_path = 'Stimuli_2d/correct' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des korrekten 2D-Bildes&amp;#10;img_wrong_path = 'Stimuli_2d/wrong' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des falschen 2D-Bildes&amp;#10;img_target_path = 'Stimuli_2d/target' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des Target-Bildes" valType="extendedCode"/>
+        <Param name="Code Type" updates="None" val="Auto-&gt;JS" valType="str"/>
+        <Param name="Each Frame" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Each JS Frame" updates="constant" val="" valType="extendedCode"/>
+        <Param name="End Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="End JS Experiment" updates="constant" val="" valType="extendedCode"/>
+        <Param name="End JS Routine" updates="constant" val="" valType="extendedCode"/>
+        <Param name="End Routine" updates="constant" val="" valType="extendedCode"/>
+        <Param name="disabled" updates="None" val="False" valType="bool"/>
+        <Param name="name" updates="None" val="fix_point_code" valType="code"/>
+      </CodeComponent>
       <PolygonComponent name="fix_point">
         <Param name="colorSpace" updates="constant" val="rgb" valType="str"/>
         <Param name="contrast" updates="constant" val="1" valType="num"/>
@@ -145,20 +162,38 @@
       <CodeComponent name="trial_2D_code">
         <Param name="Before Experiment" updates="constant" val="" valType="extendedCode"/>
         <Param name="Before JS Experiment" updates="constant" val="" valType="extendedCode"/>
-        <Param name="Begin Experiment" updates="constant" val="# Importieren der relevanten / benötigten Libraries&amp;#10;import random # für Zugriff auf die random- und shuffle-Methode&amp;#10;&amp;#10;# Erstellen der Liste mit den Bild-Indices&amp;#10;# Da die Bilder von 1-15 durchnummeriert sind, wird eine Liste mit entsprechenden Integern angelegt&amp;#10;img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]&amp;#10;&amp;#10;# Randomisierung der Liste mit den Bild-Indices&amp;#10;# wenn als Pfad zur Bilddatei $#Stimuli_2D/target' + str(img_index[trials.thisN]) + '.png'&amp;#10;# verwendet wird, erhält man eine zufällige Reihenfolge der Bilddateien,&amp;#10;# da die img_index-Liste vorher geshuffelt wurde&amp;#10;random.shuffle(img_index)&amp;#10;" valType="extendedCode"/>
+        <Param name="Begin Experiment" updates="constant" val="# Importieren der relevanten / benötigten Libraries&amp;#10;import random # für Zugriff auf die random- und shuffle-Methode&amp;#10;&amp;#10;# Erstellen der Liste mit den Bild-Indices&amp;#10;# Da die Bilder von 1-15 durchnummeriert sind (z.B. correct1.png), wird eine Liste mit &amp;#10;# entsprechenden Integern angelegt&amp;#10;img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]&amp;#10;&amp;#10;# Randomisierung der Liste mit den Bild-Indices&amp;#10;# wenn als Pfad zur Bilddatei $#Stimuli_2D/target' + str(img_index[trials.thisN]) + '.png'&amp;#10;# verwendet wird, erhält man eine zufällige Reihenfolge der Bilddateien,&amp;#10;# da die img_index-Liste vorher geshuffelt wurde&amp;#10;random.shuffle(img_index)&amp;#10;" valType="extendedCode"/>
         <Param name="Begin JS Experiment" updates="constant" val="import * as random from 'random';&amp;#10;var img_index;&amp;#10;img_index = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];&amp;#10;random.shuffle(img_index);&amp;#10;" valType="extendedCode"/>
         <Param name="Begin JS Routine" updates="constant" val="if ((random.random() &lt; 0.5)) {&amp;#10;    x_pos_correct = (- 250);&amp;#10;} else {&amp;#10;    x_pos_correct = 250;&amp;#10;}&amp;#10;" valType="extendedCode"/>
-        <Param name="Begin Routine" updates="constant" val="# Festlegen der x-Position der Correct- und &amp;#10;# Wrong-Stimuli / Bilder&amp;#10;# x_pos_correct wird bei dem Bildstimulus&amp;#10;# img_correct, -x_pos_correct bei dem &amp;#10;# Bildstimulus img_wrong unter Position als x-Koordinate&amp;#10;# verwendet. Der Wert 250 ist arbiträr gewählt, die&amp;#10;# Anordnung der Stimuli ähnelt aber der in der &amp;#10;# Aufgabenstellung aufgeführten Anordnung.&amp;#10;if random.random() &lt; 0.5:&amp;#10;    x_pos_correct = -250&amp;#10;else:&amp;#10;    x_pos_correct = 250" valType="extendedCode"/>
+        <Param name="Begin Routine" updates="constant" val="# Festlegen der x-Position der Correct- und &amp;#10;# Wrong-Stimuli / Bilder&amp;#10;# x_pos_correct wird bei dem Bildstimulus&amp;#10;# img_correct, -x_pos_correct bei dem &amp;#10;# Bildstimulus img_wrong unter Position als x-Koordinate&amp;#10;# verwendet. Der Wert 250 ist arbiträr gewählt, die&amp;#10;# Anordnung der Stimuli ähnelt aber der in der &amp;#10;# Aufgabenstellung vorgegebenen Anordnung.&amp;#10;if random.random() &lt; 0.5:&amp;#10;    x_pos_correct = -250&amp;#10;else:&amp;#10;    x_pos_correct = 250" valType="extendedCode"/>
         <Param name="Code Type" updates="None" val="Auto-&gt;JS" valType="str"/>
         <Param name="Each Frame" updates="constant" val="" valType="extendedCode"/>
         <Param name="Each JS Frame" updates="constant" val="" valType="extendedCode"/>
         <Param name="End Experiment" updates="constant" val="" valType="extendedCode"/>
         <Param name="End JS Experiment" updates="constant" val="" valType="extendedCode"/>
-        <Param name="End JS Routine" updates="constant" val="" valType="extendedCode"/>
-        <Param name="End Routine" updates="constant" val="" valType="extendedCode"/>
+        <Param name="End JS Routine" updates="constant" val="psychoJS.experiment.addData(&quot;x_pos_correct&quot;, x_pos_correct);&amp;#10;psychoJS.experiment.addData(&quot;x_pos_wrong&quot;, (- x_pos_correct));&amp;#10;psychoJS.experiment.addData(&quot;img_correct&quot;, img_correct_path);&amp;#10;psychoJS.experiment.addData(&quot;img_wrong&quot;, img_wrong_path);&amp;#10;psychoJS.experiment.addData(&quot;img_target&quot;, img_target_path);&amp;#10;" valType="extendedCode"/>
+        <Param name="End Routine" updates="constant" val="# Speichern der x-Koordinaten der Stimuli&amp;#10;# x_pos_correct = x-Position (pix) der img_correct-Stimuli&amp;#10;# x_pos_wrong = x-Position (pix) der img_wrong-Stimuli&amp;#10;thisExp.addData('x_pos_correct', x_pos_correct)&amp;#10;thisExp.addData('x_pos_wrong', -x_pos_correct)&amp;#10;&amp;#10;# Speichern der verwendeten Bilddateien&amp;#10;# (in den csv-Dateien kann man anhand der Zahlern&amp;#10;# der verwendeten Bilder sehen, dass die Stimuli&amp;#10;# randomisiert präsentiert werden)&amp;#10;thisExp.addData('img_correct', img_correct_path)&amp;#10;thisExp.addData('img_wrong', img_wrong_path)&amp;#10;thisExp.addData('img_target', img_target_path)" valType="extendedCode"/>
         <Param name="disabled" updates="None" val="False" valType="bool"/>
         <Param name="name" updates="None" val="trial_2D_code" valType="code"/>
       </CodeComponent>
+      <MouseComponent name="trial_2D_mouse">
+        <Param name="clickable" updates="constant" val="img_correct" valType="list"/>
+        <Param name="disabled" updates="None" val="False" valType="bool"/>
+        <Param name="durationEstim" updates="None" val="10" valType="code"/>
+        <Param name="forceEndRoutineOnPress" updates="constant" val="valid click" valType="str"/>
+        <Param name="name" updates="None" val="trial_2D_mouse" valType="code"/>
+        <Param name="newClicksOnly" updates="constant" val="True" valType="bool"/>
+        <Param name="saveMouseState" updates="None" val="on click" valType="str"/>
+        <Param name="saveParamsClickable" updates="constant" val="name, pos" valType="list"/>
+        <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
+        <Param name="startEstim" updates="None" val="0" valType="code"/>
+        <Param name="startType" updates="None" val="time (s)" valType="str"/>
+        <Param name="startVal" updates="None" val="0.0" valType="code"/>
+        <Param name="stopType" updates="None" val="duration (s)" valType="str"/>
+        <Param name="stopVal" updates="constant" val="10" valType="code"/>
+        <Param name="syncScreenRefresh" updates="None" val="False" valType="bool"/>
+        <Param name="timeRelativeTo" updates="constant" val="routine" valType="str"/>
+      </MouseComponent>
       <ImageComponent name="img_correct">
         <Param name="color" updates="constant" val="$[1,1,1]" valType="color"/>
         <Param name="colorSpace" updates="constant" val="rgb" valType="str"/>
@@ -167,7 +202,7 @@
         <Param name="durationEstim" updates="None" val="10" valType="code"/>
         <Param name="flipHoriz" updates="constant" val="False" valType="bool"/>
         <Param name="flipVert" updates="constant" val="False" valType="bool"/>
-        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$'Stimuli_2d/correct' + str(img_index[trials_2D.thisN]) + '.png'" valType="file"/>
+        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$img_correct_path" valType="file"/>
         <Param name="interpolate" updates="constant" val="linear" valType="str"/>
         <Param name="mask" updates="constant" val="" valType="str"/>
         <Param name="name" updates="None" val="img_correct" valType="code"/>
@@ -193,7 +228,7 @@
         <Param name="durationEstim" updates="None" val="10" valType="code"/>
         <Param name="flipHoriz" updates="constant" val="False" valType="bool"/>
         <Param name="flipVert" updates="constant" val="False" valType="bool"/>
-        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$'Stimuli_2d/target' + str(img_index[trials_2D.thisN]) + '.png'" valType="file"/>
+        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$img_target_path" valType="file"/>
         <Param name="interpolate" updates="constant" val="linear" valType="str"/>
         <Param name="mask" updates="constant" val="" valType="str"/>
         <Param name="name" updates="None" val="img_target" valType="code"/>
@@ -219,7 +254,7 @@
         <Param name="durationEstim" updates="None" val="10" valType="code"/>
         <Param name="flipHoriz" updates="constant" val="False" valType="bool"/>
         <Param name="flipVert" updates="constant" val="False" valType="bool"/>
-        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$'Stimuli_2d/wrong' + str(img_index[trials_2D.thisN]) + '.png'" valType="file"/>
+        <Param name="image" updates="set during: ITI_Fixation_2D.fix_point_ISI" val="$img_wrong_path" valType="file"/>
         <Param name="interpolate" updates="constant" val="linear" valType="str"/>
         <Param name="mask" updates="constant" val="" valType="str"/>
         <Param name="name" updates="None" val="img_wrong" valType="code"/>
