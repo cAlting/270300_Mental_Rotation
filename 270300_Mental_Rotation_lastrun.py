@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 24, 2022, at 12:49
+    on Februar 24, 2022, at 16:03
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -37,7 +37,7 @@ os.chdir(_thisDir)
 # Store info about the experiment session
 psychopyVersion = '2021.2.3'
 expName = '270300_Mental_Rotation'  # from the Builder filename that created this script
-expInfo = {'participant': '', 'session': '001'}
+expInfo = {'participant': '', 'session': '001', 'group': ''}
 dlg = gui.DlgFromDict(dictionary=expInfo, sortKeys=False, title=expName)
 if dlg.OK == False:
     core.quit()  # user pressed cancel
@@ -160,6 +160,158 @@ instr_3D = visual.TextStim(win=win, name='instr_3D',
     languageStyle='LTR',
     depth=0.0);
 instr_3D_kb = keyboard.Keyboard()
+
+# Initialize components for Routine "ITI_Fixation_3D"
+ITI_Fixation_3DClock = core.Clock()
+fix_point_3D = visual.ShapeStim(
+    win=win, name='fix_point_3D',units='pix', 
+    size=(10, 10), vertices='circle',
+    ori=0.0, pos=(0, 0),
+    lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
+    opacity=None, depth=0.0, interpolate=True)
+fix_point_3D_ISI = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='fix_point_3D_ISI')
+
+# Initialize components for Routine "trial_3D"
+trial_3DClock = core.Clock()
+## Laden der relevanten Libraries
+import os       # für OS-spezifischen Separator
+import sys      # um Pfad des aktuellen Python-Skriptes auszulesen
+import glob     # zum Erstellen einer Liste mit allen Bildernamen
+import re
+
+
+# Custom Funktion für natural sorting
+# gefunden unter: https://github.com/bdrung/snippets/blob/master/natural_sorted.py
+# Grund für Verwendung: Wenn Pfade zu Bilddateien per glob ausgelesen werden, wird die Reihen-
+# folge verändert (xx_0, xx_100, xx_150, xx_50), da die 5 höher als 0 oder 1 ist.
+# Natural Sorting sortiert die Pfadnamen so, "wie man es erwarten würde", d.h. so, als ob
+# die Dateien xx_50 als xx_050 vorlägen.
+def natural_sorted(iterable, key=None, reverse=False):
+    """Return a new naturally sorted list from the items in *iterable*.
+
+    The returned list is in natural sort order. The string is ordered
+    lexicographically (using the Unicode code point number to order individual
+    characters), except that multi-digit numbers are ordered as a single
+    character.
+
+    Has two optional arguments which must be specified as keyword arguments.
+
+    *key* specifies a function of one argument that is used to extract a
+    comparison key from each list element: ``key=str.lower``.  The default value
+    is ``None`` (compare the elements directly).
+
+    *reverse* is a boolean value.  If set to ``True``, then the list elements are
+    sorted as if each comparison were reversed.
+
+    The :func:`natural_sorted` function is guaranteed to be stable. A sort is
+    stable if it guarantees not to change the relative order of elements that
+    compare equal --- this is helpful for sorting in multiple passes (for
+    example, sort by department, then by salary grade).
+    """
+    prog = re.compile(r"(\d+)")
+
+    def alphanum_key(element):
+        """Split given key in list of strings and digits"""
+        return [int(c) if c.isdigit() else c for c in prog.split(key(element)
+                if key else element)]
+
+    return sorted(iterable, key=alphanum_key, reverse=reverse)
+
+
+
+
+## Einlesen der Bilder
+''' 
+1. Pfad des Experimentes / aktuellen Python-Skriptes auslesen
+Grund: wenn das Experiment auf anderen Rechnern ausgeführt wird,
+       wäre ein Hardcoden des Pfades zum Experiment (z.B. der Pfad
+       auf _meinem_ PC unklug, da es auf anderem PC zu Fehler käme)
+ 
+ Erläuterung des Codes:
+- sys.argv[0] ist der Name des Skriptes
+- os.path.realpath(<path>) wandelt Argument in kanonischen Pfad ("kürzester Pfad i.S.v. Stringlänge"
+    bzw. Pfad ohne symbolische Links, Abkürzungen wie /./../ um"), sodass der Pfad eindeutig
+    und unique ist -> Output ist der kanonische Pfad der Scriptdatei
+- os.path.dirname(<path>) gibt den Pfad der Inputdatei oder des Input-Directory (in Form einer Pfades 
+    übergeben) aus -> Output ist der Pfad der Scriptdatei sys.argv[0]
+'''
+exp_root_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+'''
+2. Abhängig vom aktuellen Block (und somit auch Gruppenzugehörigkeit, da Blockreihenfolge für Gruppe A
+und B unterschiedlich) wird das Verzeichnis der zu verwendenden Bilder dynamisch festgelegt.
+
+Erläuterungen:
+    abhängig von der verwendeten Conditions-File steht in der Conditions-Spalte in Zeile 1 easy (Gruppe A) oder
+    hard (Gruppe B). Für Gruppe A enthält ist Conditions[0] somit easy, für Gruppe B hard. Conditions[1] ist für
+    Gruppe A hard, für Gruppe B easy.
+    Zu Beginn des 3D-Taskes soll eine Liste mit den relativen Pfaden (relativ zu Root-Dir des Experimentes)
+    zu ALLEN Bildern, die in der jeweiligen Gruppe verwendet werden, in der entsprechenden Reihenfolge 
+    erstellt werden. Durch einen Trialindex wird dann innerhalb der Image-Komponente der trial_3D-Routine auf
+    das entsprechende Bild zugegriffen, wobei das Bild selbst während der Fixations geladen wird.
+'''
+
+if expInfo['group'] == "A":
+    first_block = 'Stimuli_3D\\easy'
+    second_block = 'Stimuli_3D\\hard'
+elif expInfo['group'] == "B":
+    first_block = 'Stimuli_3D\\hard'
+    second_block = 'Stimuli_3D\\easy'
+
+img_path_1 = exp_root_path + os.sep + first_block     # Pfad der Bilder, die zuerst erscheinen sollen (easy oder hard)
+img_path_2 = exp_root_path + os.sep + second_block     # Pfad der Bilder, die als zweites erscheinen sollen
+
+'''
+3. Auslesen der Pfade zu den Bilddateien und Erstellen der Liste mit relativen Pfaden, natürlich sortiert
+
+'''
+
+img_files_1 = glob.glob(img_path_1 + os.sep + '*.jpg')  # Erstellt Liste mit Pfaden zu den Bildern, die im 1. Block gezeigt werden
+                                                        # (easy oder hard, abhängig von Gruppenzugehörigkeit)
+img_files_2 = glob.glob(img_path_2 + os.sep + '*.jpg')  # Liste mit Pfaden zu den Bildern, die im 2. Block gezeigt werden
+
+
+# Anlegen zweier Listen für relative Pfade. Die Elemente der Listen werden separat natürlich sortiert,
+# bevor sie in eine einzelne Liste zusammengeführt werden
+img_files_rel_1 = []
+img_files_rel_2 = []
+
+# Eigentliches Auslesen der relativen Pfade (Liste der Bilder, die im 1. Block gezeigt werden sollen)
+for img in img_files_1:
+    img_split = img.split(os.sep)   # trennt die Strings an den Stellen, wo der OS Seperator (Windows: \\) vorliegt
+    img_joined = os.sep.join(img_split[-3:])    # fügt die letzten 3 Elemente (Stimuli_3D, easy (oder hard), Filename.jpg zusammen
+    img_files_rel_1.append(img_joined)     # fügt den relativen Pfad der img_files_complete-Liste hinzu
+
+# Eigentliches Auslesen der relativen Pfade (Liste der Bilder, die im 2. Block gezeigt werden sollen)
+for img in img_files_2:
+    img_split = img.split(os.sep)
+    img_joined = os.sep.join(img_split[-3:])
+    img_files_rel_2.append(img_joined)
+
+# Natural sorting der Listen unter Verwendung der custom Function
+natural_sorted(img_files_rel_1)
+natural_sorted(img_files_rel_2)
+
+# Zusammenführen ("Concatenation") der Listen
+# Diese enthält nun alle 2x192 = 384 relativen Pfade zu den Stimuli in der Art, dass
+# für Gruppe A zunächst alle Pfade der Bilder im easy-Ordner, dann alle Pfade der Bilder 
+# im hard-Ordner folgen. Für Gruppe B verhält es sich entsprechend umgekehrt
+img_files_complete = [*img_files_rel_1, *img_files_rel_2]
+
+
+# Anlegen einer Iterationsvariable, um die relativen Pfade der img_files_complete-Liste zu indizieren
+current_trial_3D = 0
+stim_3D = visual.ImageStim(
+    win=win,
+    name='stim_3D', units='pix', 
+    image='sin', mask=None,
+    ori=0.0, pos=(0, 0), size=(800, 427),
+    color=[1,1,1], colorSpace='rgb', opacity=None,
+    flipHoriz=False, flipVert=False,
+    texRes=128.0, interpolate=True, depth=-1.0)
+
+# Initialize components for Routine "feedback_3D"
+feedback_3DClock = core.Clock()
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
@@ -673,6 +825,235 @@ thisExp.addData('instr_3D_kb.stopped', instr_3D_kb.tStopRefresh)
 thisExp.nextEntry()
 # the Routine "instructions_3D" was not non-slip safe, so reset the non-slip timer
 routineTimer.reset()
+
+# set up handler to look after randomisation of conditions etc
+trials_3D = data.TrialHandler(nReps=192.0, method='random', 
+    extraInfo=expInfo, originPath=-1,
+    trialList=[None],
+    seed=None, name='trials_3D')
+thisExp.addLoop(trials_3D)  # add the loop to the experiment
+thisTrials_3D = trials_3D.trialList[0]  # so we can initialise stimuli with some values
+# abbreviate parameter names if possible (e.g. rgb = thisTrials_3D.rgb)
+if thisTrials_3D != None:
+    for paramName in thisTrials_3D:
+        exec('{} = thisTrials_3D[paramName]'.format(paramName))
+
+for thisTrials_3D in trials_3D:
+    currentLoop = trials_3D
+    # abbreviate parameter names if possible (e.g. rgb = thisTrials_3D.rgb)
+    if thisTrials_3D != None:
+        for paramName in thisTrials_3D:
+            exec('{} = thisTrials_3D[paramName]'.format(paramName))
+    
+    # ------Prepare to start Routine "ITI_Fixation_3D"-------
+    continueRoutine = True
+    routineTimer.add(1.000000)
+    # update component parameters for each repeat
+    # keep track of which components have finished
+    ITI_Fixation_3DComponents = [fix_point_3D, fix_point_3D_ISI]
+    for thisComponent in ITI_Fixation_3DComponents:
+        thisComponent.tStart = None
+        thisComponent.tStop = None
+        thisComponent.tStartRefresh = None
+        thisComponent.tStopRefresh = None
+        if hasattr(thisComponent, 'status'):
+            thisComponent.status = NOT_STARTED
+    # reset timers
+    t = 0
+    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+    ITI_Fixation_3DClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
+    frameN = -1
+    
+    # -------Run Routine "ITI_Fixation_3D"-------
+    while continueRoutine and routineTimer.getTime() > 0:
+        # get current time
+        t = ITI_Fixation_3DClock.getTime()
+        tThisFlip = win.getFutureFlipTime(clock=ITI_Fixation_3DClock)
+        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+        # update/draw components on each frame
+        
+        # *fix_point_3D* updates
+        if fix_point_3D.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            fix_point_3D.frameNStart = frameN  # exact frame index
+            fix_point_3D.tStart = t  # local t and not account for scr refresh
+            fix_point_3D.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(fix_point_3D, 'tStartRefresh')  # time at next scr refresh
+            fix_point_3D.setAutoDraw(True)
+        if fix_point_3D.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > fix_point_3D.tStartRefresh + 1.0-frameTolerance:
+                # keep track of stop time/frame for later
+                fix_point_3D.tStop = t  # not accounting for scr refresh
+                fix_point_3D.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(fix_point_3D, 'tStopRefresh')  # time at next scr refresh
+                fix_point_3D.setAutoDraw(False)
+        # *fix_point_3D_ISI* period
+        if fix_point_3D_ISI.status == NOT_STARTED and t >= 0-frameTolerance:
+            # keep track of start time/frame for later
+            fix_point_3D_ISI.frameNStart = frameN  # exact frame index
+            fix_point_3D_ISI.tStart = t  # local t and not account for scr refresh
+            fix_point_3D_ISI.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(fix_point_3D_ISI, 'tStartRefresh')  # time at next scr refresh
+            fix_point_3D_ISI.start(1)
+        elif fix_point_3D_ISI.status == STARTED:  # one frame should pass before updating params and completing
+            # updating other components during *fix_point_3D_ISI*
+            stim_3D.setImage(img_files_complete[current_trial_3D])
+            # component updates done
+            fix_point_3D_ISI.complete()  # finish the static period
+            fix_point_3D_ISI.tStop = fix_point_3D_ISI.tStart + 1  # record stop time
+        
+        # check for quit (typically the Esc key)
+        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+            core.quit()
+        
+        # check if all components have finished
+        if not continueRoutine:  # a component has requested a forced-end of Routine
+            break
+        continueRoutine = False  # will revert to True if at least one component still running
+        for thisComponent in ITI_Fixation_3DComponents:
+            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                continueRoutine = True
+                break  # at least one component has not yet finished
+        
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+    
+    # -------Ending Routine "ITI_Fixation_3D"-------
+    for thisComponent in ITI_Fixation_3DComponents:
+        if hasattr(thisComponent, "setAutoDraw"):
+            thisComponent.setAutoDraw(False)
+    trials_3D.addData('fix_point_3D.started', fix_point_3D.tStartRefresh)
+    trials_3D.addData('fix_point_3D.stopped', fix_point_3D.tStopRefresh)
+    trials_3D.addData('fix_point_3D_ISI.started', fix_point_3D_ISI.tStart)
+    trials_3D.addData('fix_point_3D_ISI.stopped', fix_point_3D_ISI.tStop)
+    
+    # ------Prepare to start Routine "trial_3D"-------
+    continueRoutine = True
+    routineTimer.add(10.000000)
+    # update component parameters for each repeat
+    # keep track of which components have finished
+    trial_3DComponents = [stim_3D]
+    for thisComponent in trial_3DComponents:
+        thisComponent.tStart = None
+        thisComponent.tStop = None
+        thisComponent.tStartRefresh = None
+        thisComponent.tStopRefresh = None
+        if hasattr(thisComponent, 'status'):
+            thisComponent.status = NOT_STARTED
+    # reset timers
+    t = 0
+    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+    trial_3DClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
+    frameN = -1
+    
+    # -------Run Routine "trial_3D"-------
+    while continueRoutine and routineTimer.getTime() > 0:
+        # get current time
+        t = trial_3DClock.getTime()
+        tThisFlip = win.getFutureFlipTime(clock=trial_3DClock)
+        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+        # update/draw components on each frame
+        
+        # *stim_3D* updates
+        if stim_3D.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            stim_3D.frameNStart = frameN  # exact frame index
+            stim_3D.tStart = t  # local t and not account for scr refresh
+            stim_3D.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(stim_3D, 'tStartRefresh')  # time at next scr refresh
+            stim_3D.setAutoDraw(True)
+        if stim_3D.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > stim_3D.tStartRefresh + 10-frameTolerance:
+                # keep track of stop time/frame for later
+                stim_3D.tStop = t  # not accounting for scr refresh
+                stim_3D.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(stim_3D, 'tStopRefresh')  # time at next scr refresh
+                stim_3D.setAutoDraw(False)
+        
+        # check for quit (typically the Esc key)
+        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+            core.quit()
+        
+        # check if all components have finished
+        if not continueRoutine:  # a component has requested a forced-end of Routine
+            break
+        continueRoutine = False  # will revert to True if at least one component still running
+        for thisComponent in trial_3DComponents:
+            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                continueRoutine = True
+                break  # at least one component has not yet finished
+        
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+    
+    # -------Ending Routine "trial_3D"-------
+    for thisComponent in trial_3DComponents:
+        if hasattr(thisComponent, "setAutoDraw"):
+            thisComponent.setAutoDraw(False)
+    current_trial_3D += 1
+    trials_3D.addData('stim_3D.started', stim_3D.tStartRefresh)
+    trials_3D.addData('stim_3D.stopped', stim_3D.tStopRefresh)
+    
+    # ------Prepare to start Routine "feedback_3D"-------
+    continueRoutine = True
+    # update component parameters for each repeat
+    # keep track of which components have finished
+    feedback_3DComponents = []
+    for thisComponent in feedback_3DComponents:
+        thisComponent.tStart = None
+        thisComponent.tStop = None
+        thisComponent.tStartRefresh = None
+        thisComponent.tStopRefresh = None
+        if hasattr(thisComponent, 'status'):
+            thisComponent.status = NOT_STARTED
+    # reset timers
+    t = 0
+    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+    feedback_3DClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
+    frameN = -1
+    
+    # -------Run Routine "feedback_3D"-------
+    while continueRoutine:
+        # get current time
+        t = feedback_3DClock.getTime()
+        tThisFlip = win.getFutureFlipTime(clock=feedback_3DClock)
+        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+        # update/draw components on each frame
+        
+        # check for quit (typically the Esc key)
+        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+            core.quit()
+        
+        # check if all components have finished
+        if not continueRoutine:  # a component has requested a forced-end of Routine
+            break
+        continueRoutine = False  # will revert to True if at least one component still running
+        for thisComponent in feedback_3DComponents:
+            if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
+                continueRoutine = True
+                break  # at least one component has not yet finished
+        
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+    
+    # -------Ending Routine "feedback_3D"-------
+    for thisComponent in feedback_3DComponents:
+        if hasattr(thisComponent, "setAutoDraw"):
+            thisComponent.setAutoDraw(False)
+    # the Routine "feedback_3D" was not non-slip safe, so reset the non-slip timer
+    routineTimer.reset()
+    thisExp.nextEntry()
+    
+# completed 192.0 repeats of 'trials_3D'
+
 
 # Flip one final time so any remaining win.callOnFlip() 
 # and win.timeOnFlip() tasks get executed before quitting
