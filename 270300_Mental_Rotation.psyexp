@@ -7,7 +7,7 @@
     <Param name="Data file delimiter" updates="None" val="auto" valType="str"/>
     <Param name="Data filename" updates="None" val="u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])" valType="code"/>
     <Param name="Enable Escape" updates="None" val="True" valType="bool"/>
-    <Param name="Experiment info" updates="None" val="{'participant': '', 'session': '001', 'group (choose A or B)': ''}" valType="code"/>
+    <Param name="Experiment info" updates="None" val="{'participant': '', 'session': '001'}" valType="code"/>
     <Param name="Force stereo" updates="None" val="True" valType="bool"/>
     <Param name="Full-screen window" updates="None" val="True" valType="bool"/>
     <Param name="HTML path" updates="None" val="" valType="str"/>
@@ -118,7 +118,7 @@
         <Param name="disabled" updates="None" val="False" valType="bool"/>
         <Param name="name" updates="None" val="fix_point_code" valType="code"/>
       </CodeComponent>
-      <PolygonComponent name="fix_point_2D">
+      <PolygonComponent name="fix_point">
         <Param name="colorSpace" updates="constant" val="rgb" valType="str"/>
         <Param name="contrast" updates="constant" val="1" valType="num"/>
         <Param name="disabled" updates="None" val="False" valType="bool"/>
@@ -128,7 +128,7 @@
         <Param name="lineColor" updates="constant" val="white" valType="color"/>
         <Param name="lineWidth" updates="constant" val="1" valType="num"/>
         <Param name="nVertices" updates="constant" val="4" valType="int"/>
-        <Param name="name" updates="None" val="fix_point_2D" valType="code"/>
+        <Param name="name" updates="None" val="fix_point" valType="code"/>
         <Param name="opacity" updates="constant" val="" valType="num"/>
         <Param name="ori" updates="constant" val="0" valType="num"/>
         <Param name="pos" updates="constant" val="(0, 0)" valType="list"/>
@@ -144,11 +144,11 @@
         <Param name="units" updates="None" val="pix" valType="str"/>
         <Param name="vertices" updates="constant" val="" valType="list"/>
       </PolygonComponent>
-      <StaticComponent name="fix_point_2D_ISI">
+      <StaticComponent name="fix_point_ISI">
         <Param name="code" updates="None" val="" valType="code"/>
         <Param name="disabled" updates="None" val="False" valType="bool"/>
         <Param name="durationEstim" updates="None" val="1" valType="code"/>
-        <Param name="name" updates="None" val="fix_point_2D_ISI" valType="code"/>
+        <Param name="name" updates="None" val="fix_point_ISI" valType="code"/>
         <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
         <Param name="startEstim" updates="None" val="0" valType="code"/>
         <Param name="startType" updates="None" val="time (s)" valType="str"/>
@@ -167,8 +167,8 @@
         <Param name="Begin JS Routine" updates="constant" val="if ((random.random() &lt; 0.5)) {&amp;#10;    x_pos_correct = (- 250);&amp;#10;} else {&amp;#10;    x_pos_correct = 250;&amp;#10;}&amp;#10;" valType="extendedCode"/>
         <Param name="Begin Routine" updates="constant" val="# Festlegen der x-Position der Correct- und &amp;#10;# Wrong-Stimuli / Bilder&amp;#10;# x_pos_correct wird bei dem Bildstimulus&amp;#10;# img_correct, -x_pos_correct bei dem &amp;#10;# Bildstimulus img_wrong unter Position als x-Koordinate&amp;#10;# verwendet. Der Wert 250 ist arbiträr gewählt, die&amp;#10;# Anordnung der Stimuli ähnelt aber der in der &amp;#10;# Aufgabenstellung vorgegebenen Anordnung.&amp;#10;if random.random() &lt; 0.5:&amp;#10;    x_pos_correct = -250&amp;#10;else:&amp;#10;    x_pos_correct = 250" valType="extendedCode"/>
         <Param name="Code Type" updates="None" val="Auto-&gt;JS" valType="str"/>
-        <Param name="Each Frame" updates="constant" val="# Beenden der Routine nach 10s&amp;#10;if t &gt;= 10:&amp;#10;    continueRoutine = False&amp;#10;" valType="extendedCode"/>
-        <Param name="Each JS Frame" updates="constant" val="if ((t &gt;= 10)) {&amp;#10;    continueRoutine = false;&amp;#10;}&amp;#10;" valType="extendedCode"/>
+        <Param name="Each Frame" updates="constant" val="" valType="extendedCode"/>
+        <Param name="Each JS Frame" updates="constant" val="" valType="extendedCode"/>
         <Param name="End Experiment" updates="constant" val="" valType="extendedCode"/>
         <Param name="End JS Experiment" updates="constant" val="" valType="extendedCode"/>
         <Param name="End JS Routine" updates="constant" val="psychoJS.experiment.addData(&quot;x_pos_correct&quot;, x_pos_correct);&amp;#10;psychoJS.experiment.addData(&quot;x_pos_wrong&quot;, (- x_pos_correct));&amp;#10;psychoJS.experiment.addData(&quot;img_correct&quot;, img_correct_path);&amp;#10;psychoJS.experiment.addData(&quot;img_wrong&quot;, img_wrong_path);&amp;#10;psychoJS.experiment.addData(&quot;img_target&quot;, img_target_path);&amp;#10;" valType="extendedCode"/>
@@ -177,7 +177,7 @@
         <Param name="name" updates="None" val="trial_2D_code" valType="code"/>
       </CodeComponent>
       <MouseComponent name="trial_2D_mouse">
-        <Param name="clickable" updates="constant" val="img_correct, img_wrong" valType="list"/>
+        <Param name="clickable" updates="constant" val="img_correct" valType="list"/>
         <Param name="disabled" updates="None" val="False" valType="bool"/>
         <Param name="durationEstim" updates="None" val="10" valType="code"/>
         <Param name="forceEndRoutineOnPress" updates="constant" val="valid click" valType="str"/>
@@ -318,75 +318,6 @@
         <Param name="syncScreenRefresh" updates="constant" val="True" valType="bool"/>
       </KeyboardComponent>
     </Routine>
-    <Routine name="ITI_Fixation_3D">
-      <PolygonComponent name="fix_point_3D">
-        <Param name="colorSpace" updates="constant" val="rgb" valType="str"/>
-        <Param name="contrast" updates="constant" val="1" valType="num"/>
-        <Param name="disabled" updates="None" val="False" valType="bool"/>
-        <Param name="durationEstim" updates="None" val="1" valType="code"/>
-        <Param name="fillColor" updates="constant" val="white" valType="color"/>
-        <Param name="interpolate" updates="constant" val="linear" valType="str"/>
-        <Param name="lineColor" updates="constant" val="white" valType="color"/>
-        <Param name="lineWidth" updates="constant" val="1" valType="num"/>
-        <Param name="nVertices" updates="constant" val="4" valType="int"/>
-        <Param name="name" updates="None" val="fix_point_3D" valType="code"/>
-        <Param name="opacity" updates="constant" val="" valType="num"/>
-        <Param name="ori" updates="constant" val="0" valType="num"/>
-        <Param name="pos" updates="constant" val="(0, 0)" valType="list"/>
-        <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
-        <Param name="shape" updates="None" val="circle" valType="str"/>
-        <Param name="size" updates="constant" val="(10, 10)" valType="list"/>
-        <Param name="startEstim" updates="None" val="0" valType="code"/>
-        <Param name="startType" updates="None" val="time (s)" valType="str"/>
-        <Param name="startVal" updates="None" val="0.0" valType="code"/>
-        <Param name="stopType" updates="None" val="duration (s)" valType="str"/>
-        <Param name="stopVal" updates="constant" val="1.0" valType="code"/>
-        <Param name="syncScreenRefresh" updates="None" val="True" valType="bool"/>
-        <Param name="units" updates="None" val="pix" valType="str"/>
-        <Param name="vertices" updates="constant" val="" valType="list"/>
-      </PolygonComponent>
-      <StaticComponent name="fix_point_3D_ISI">
-        <Param name="code" updates="None" val="" valType="code"/>
-        <Param name="disabled" updates="None" val="False" valType="bool"/>
-        <Param name="durationEstim" updates="None" val="1" valType="code"/>
-        <Param name="name" updates="None" val="fix_point_3D_ISI" valType="code"/>
-        <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
-        <Param name="startEstim" updates="None" val="0" valType="code"/>
-        <Param name="startType" updates="None" val="time (s)" valType="str"/>
-        <Param name="startVal" updates="None" val="0" valType="code"/>
-        <Param name="stopType" updates="None" val="duration (s)" valType="str"/>
-        <Param name="stopVal" updates="constant" val="1" valType="code"/>
-        <Param name="syncScreenRefresh" updates="None" val="False" valType="bool"/>
-      </StaticComponent>
-    </Routine>
-    <Routine name="trial_3D">
-      <ImageComponent name="stim_3D">
-        <Param name="color" updates="constant" val="$[1,1,1]" valType="color"/>
-        <Param name="colorSpace" updates="constant" val="rgb" valType="str"/>
-        <Param name="contrast" updates="constant" val="1" valType="num"/>
-        <Param name="disabled" updates="None" val="False" valType="bool"/>
-        <Param name="durationEstim" updates="None" val="10" valType="code"/>
-        <Param name="flipHoriz" updates="constant" val="False" valType="bool"/>
-        <Param name="flipVert" updates="constant" val="False" valType="bool"/>
-        <Param name="image" updates="constant" val="" valType="file"/>
-        <Param name="interpolate" updates="constant" val="linear" valType="str"/>
-        <Param name="mask" updates="constant" val="" valType="str"/>
-        <Param name="name" updates="None" val="stim_3D" valType="code"/>
-        <Param name="opacity" updates="constant" val="" valType="num"/>
-        <Param name="ori" updates="constant" val="0" valType="num"/>
-        <Param name="pos" updates="constant" val="(0, 0)" valType="list"/>
-        <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
-        <Param name="size" updates="constant" val="(800, 427)" valType="list"/>
-        <Param name="startEstim" updates="None" val="0" valType="code"/>
-        <Param name="startType" updates="None" val="time (s)" valType="str"/>
-        <Param name="startVal" updates="None" val="0.0" valType="code"/>
-        <Param name="stopType" updates="None" val="duration (s)" valType="str"/>
-        <Param name="stopVal" updates="constant" val="10" valType="code"/>
-        <Param name="syncScreenRefresh" updates="None" val="True" valType="bool"/>
-        <Param name="texture resolution" updates="constant" val="128" valType="num"/>
-        <Param name="units" updates="None" val="pix" valType="str"/>
-      </ImageComponent>
-    </Routine>
   </Routines>
   <Flow>
     <Routine name="instructions_2D"/>
@@ -405,7 +336,5 @@
     <Routine name="trial_2D"/>
     <LoopTerminator name="trials_2D"/>
     <Routine name="instructions_3D"/>
-    <Routine name="ITI_Fixation_3D"/>
-    <Routine name="trial_3D"/>
   </Flow>
 </PsychoPy2experiment>
