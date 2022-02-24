@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 24, 2022, at 16:03
+    on Februar 24, 2022, at 17:51
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -289,18 +289,24 @@ for img in img_files_2:
     img_files_rel_2.append(img_joined)
 
 # Natural sorting der Listen unter Verwendung der custom Function
-natural_sorted(img_files_rel_1)
-natural_sorted(img_files_rel_2)
+img_files_rel_1_sorted = natural_sorted(img_files_rel_1)
+img_files_rel_2_sorted = natural_sorted(img_files_rel_2)
 
 # Zusammenführen ("Concatenation") der Listen
 # Diese enthält nun alle 2x192 = 384 relativen Pfade zu den Stimuli in der Art, dass
 # für Gruppe A zunächst alle Pfade der Bilder im easy-Ordner, dann alle Pfade der Bilder 
 # im hard-Ordner folgen. Für Gruppe B verhält es sich entsprechend umgekehrt
-img_files_complete = [*img_files_rel_1, *img_files_rel_2]
+img_files_complete = [*img_files_rel_1_sorted, *img_files_rel_2_sorted]
 
+# Festlegen der Answer-Keys
+# Hier können die Tasten, mit denen deckungsgleiche und nicht deckungsgleiche
+# Bilder angegeben werden sollen, festgelegt werden. Dies wird bei der
+# Bewertung der Antwort (richtig oder falsch) unter End Routine in dieser
+# Code Komponenten automatisch berücksichtigt
+same_key = 'up'
+diff_key = 'down'
 
-# Anlegen einer Iterationsvariable, um die relativen Pfade der img_files_complete-Liste zu indizieren
-current_trial_3D = 0
+allowed_keys = [same_key, diff_key]
 stim_3D = visual.ImageStim(
     win=win,
     name='stim_3D', units='pix', 
@@ -309,6 +315,7 @@ stim_3D = visual.ImageStim(
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-1.0)
+key_resp_3D = keyboard.Keyboard()
 
 # Initialize components for Routine "feedback_3D"
 feedback_3DClock = core.Clock()
@@ -603,10 +610,10 @@ for thisTrials_2D in trials_2D:
                     # check if the mouse was inside our 'clickable' objects
                     gotValidClick = False
                     try:
-                        iter(img_correct)
-                        clickableList = img_correct
+                        iter([img_correct, img_wrong])
+                        clickableList = [img_correct, img_wrong]
                     except:
-                        clickableList = [img_correct]
+                        clickableList = [[img_correct, img_wrong]]
                     for obj in clickableList:
                         if obj.contains(trial_2D_mouse):
                             gotValidClick = True
@@ -827,7 +834,7 @@ thisExp.nextEntry()
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials_3D = data.TrialHandler(nReps=192.0, method='random', 
+trials_3D = data.TrialHandler(nReps=384.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials_3D')
@@ -899,7 +906,7 @@ for thisTrials_3D in trials_3D:
             fix_point_3D_ISI.start(1)
         elif fix_point_3D_ISI.status == STARTED:  # one frame should pass before updating params and completing
             # updating other components during *fix_point_3D_ISI*
-            stim_3D.setImage(img_files_complete[current_trial_3D])
+            stim_3D.setImage(img_files_complete[trials_3D.thisN])
             # component updates done
             fix_point_3D_ISI.complete()  # finish the static period
             fix_point_3D_ISI.tStop = fix_point_3D_ISI.tStart + 1  # record stop time
@@ -934,8 +941,11 @@ for thisTrials_3D in trials_3D:
     continueRoutine = True
     routineTimer.add(10.000000)
     # update component parameters for each repeat
+    key_resp_3D.keys = []
+    key_resp_3D.rt = []
+    _key_resp_3D_allKeys = []
     # keep track of which components have finished
-    trial_3DComponents = [stim_3D]
+    trial_3DComponents = [stim_3D, key_resp_3D]
     for thisComponent in trial_3DComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -975,6 +985,45 @@ for thisTrials_3D in trials_3D:
                 win.timeOnFlip(stim_3D, 'tStopRefresh')  # time at next scr refresh
                 stim_3D.setAutoDraw(False)
         
+        # *key_resp_3D* updates
+        waitOnFlip = False
+        if key_resp_3D.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            key_resp_3D.frameNStart = frameN  # exact frame index
+            key_resp_3D.tStart = t  # local t and not account for scr refresh
+            key_resp_3D.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(key_resp_3D, 'tStartRefresh')  # time at next scr refresh
+            key_resp_3D.status = STARTED
+            # AllowedKeys looks like a variable named `allowed_keys`
+            if not type(allowed_keys) in [list, tuple, np.ndarray]:
+                if not isinstance(allowed_keys, str):
+                    logging.error('AllowedKeys variable `allowed_keys` is not string- or list-like.')
+                    core.quit()
+                elif not ',' in allowed_keys:
+                    allowed_keys = (allowed_keys,)
+                else:
+                    allowed_keys = eval(allowed_keys)
+            # keyboard checking is just starting
+            waitOnFlip = True
+            win.callOnFlip(key_resp_3D.clock.reset)  # t=0 on next screen flip
+            win.callOnFlip(key_resp_3D.clearEvents, eventType='keyboard')  # clear events on next screen flip
+        if key_resp_3D.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > key_resp_3D.tStartRefresh + 10-frameTolerance:
+                # keep track of stop time/frame for later
+                key_resp_3D.tStop = t  # not accounting for scr refresh
+                key_resp_3D.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(key_resp_3D, 'tStopRefresh')  # time at next scr refresh
+                key_resp_3D.status = FINISHED
+        if key_resp_3D.status == STARTED and not waitOnFlip:
+            theseKeys = key_resp_3D.getKeys(keyList=list(allowed_keys), waitRelease=False)
+            _key_resp_3D_allKeys.extend(theseKeys)
+            if len(_key_resp_3D_allKeys):
+                key_resp_3D.keys = _key_resp_3D_allKeys[-1].name  # just the last key pressed
+                key_resp_3D.rt = _key_resp_3D_allKeys[-1].rt
+                # a response ends the routine
+                continueRoutine = False
+        
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
             core.quit()
@@ -996,9 +1045,49 @@ for thisTrials_3D in trials_3D:
     for thisComponent in trial_3DComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    current_trial_3D += 1
+    '''
+    Überprüfen der Antworttaste der VP auf Richtigkeit.
+    Für den Fall, dass die Bilder des 3D Task randomisiert
+    bzw. geshuffelt präsentiert werden sollen, erfolgt der
+    Check nicht anhand einer Liste mit alternierend up und down
+    Einträgen. Stattdessen wird auf ein großes R im relativen
+    Pfad des im aktuellen Trial verwendeten Stimulus geprüft.
+    Wenn der relative Pfad ein R einhält, handelt es sich um einen
+    Trial mit nicht deckungsgleichen Bildern, weshalb dann die
+    diff_key-Taste (default: 'down') die korrekte Antwort ist und eine
+    1 geloggt wird.
+    Wird die same_key-Taste gedrückt, war es eine falsche Antwort und
+    es wird die 0 geloggt.
+    Umgekehrt verhält es sich mit der Zuordnung in den Trials mit deckungsgleichen
+    Stimuli. Hier ist der same_key (default: 'up') die korrekte Antwort,
+    weshalb bei Druck dieser Taste eine 1 geloggt wird.
+    '''
+    
+    if "R" in img_files_complete[trials_3D.thisN]:
+        if key_resp_3D.keys == diff_key:
+            corrAns = 1
+        else:
+            corrAns = 0
+    else:
+        if key_resp_3D.keys == same_key:
+            corrAns = 1
+        else:
+            corrAns = 0
+    
+    # Loggen des relativen Pfades des aktuellen Stimulus
+    # sowie der Richtigkeit der Antwort
+    thisExp.addData('corrAns', corrAns)
+    thisExp.addData('stim_path', img_files_complete[trials_3D.thisN])
     trials_3D.addData('stim_3D.started', stim_3D.tStartRefresh)
     trials_3D.addData('stim_3D.stopped', stim_3D.tStopRefresh)
+    # check responses
+    if key_resp_3D.keys in ['', [], None]:  # No response was made
+        key_resp_3D.keys = None
+    trials_3D.addData('key_resp_3D.keys',key_resp_3D.keys)
+    if key_resp_3D.keys != None:  # we had a response
+        trials_3D.addData('key_resp_3D.rt', key_resp_3D.rt)
+    trials_3D.addData('key_resp_3D.started', key_resp_3D.tStartRefresh)
+    trials_3D.addData('key_resp_3D.stopped', key_resp_3D.tStopRefresh)
     
     # ------Prepare to start Routine "feedback_3D"-------
     continueRoutine = True
@@ -1052,7 +1141,7 @@ for thisTrials_3D in trials_3D:
     routineTimer.reset()
     thisExp.nextEntry()
     
-# completed 192.0 repeats of 'trials_3D'
+# completed 384.0 repeats of 'trials_3D'
 
 
 # Flip one final time so any remaining win.callOnFlip() 
