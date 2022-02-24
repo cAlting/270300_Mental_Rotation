@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 24, 2022, at 09:51
+    on Februar 24, 2022, at 12:49
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -93,17 +93,17 @@ instr_2D = visual.ImageStim(
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=0.0)
-instr_kb = keyboard.Keyboard()
+instr_2D_kb = keyboard.Keyboard()
 
 # Initialize components for Routine "ITI_Fixation_2D"
 ITI_Fixation_2DClock = core.Clock()
-fix_point = visual.ShapeStim(
-    win=win, name='fix_point',units='pix', 
+fix_point_2D = visual.ShapeStim(
+    win=win, name='fix_point_2D',units='pix', 
     size=(10, 10), vertices='circle',
     ori=0.0, pos=(0, 0),
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=-1.0, interpolate=True)
-fix_point_ISI = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='fix_point_ISI')
+fix_point_2D_ISI = clock.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='fix_point_2D_ISI')
 
 # Initialize components for Routine "trial_2D"
 trial_2DClock = core.Clock()
@@ -121,6 +121,7 @@ img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 # da die img_index-Liste vorher geshuffelt wurde
 random.shuffle(img_index)
 
+print(os.path.dirname(os.path.realpath(sys.argv[0])))
 trial_2D_mouse = event.Mouse(win=win)
 x, y = [None, None]
 trial_2D_mouse.mouseClock = core.Clock()
@@ -151,13 +152,14 @@ img_wrong = visual.ImageStim(
 
 # Initialize components for Routine "instructions_3D"
 instructions_3DClock = core.Clock()
-text = visual.TextStim(win=win, name='text',
+instr_3D = visual.TextStim(win=win, name='instr_3D',
     text='Die folgenden Figuren müssen verglichen werden. Überlappen die Figuren durch Drehen vollständig, dann drücken Sie die Pfeiltaste nach OBEN, wenn nicht, drücken Sie die Pfeiltaste nach UNTEN. \n\nZum Fortfahren bitte LEERTASTE drücken.',
     font='Open Sans',
     units='norm', pos=(0, 0), height=0.1, wrapWidth=1.2, ori=0.0, 
     color='white', colorSpace='rgb', opacity=None, 
     languageStyle='LTR',
     depth=0.0);
+instr_3D_kb = keyboard.Keyboard()
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
@@ -166,11 +168,11 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 # ------Prepare to start Routine "instructions_2D"-------
 continueRoutine = True
 # update component parameters for each repeat
-instr_kb.keys = []
-instr_kb.rt = []
-_instr_kb_allKeys = []
+instr_2D_kb.keys = []
+instr_2D_kb.rt = []
+_instr_2D_kb_allKeys = []
 # keep track of which components have finished
-instructions_2DComponents = [instr_2D, instr_kb]
+instructions_2DComponents = [instr_2D, instr_2D_kb]
 for thisComponent in instructions_2DComponents:
     thisComponent.tStart = None
     thisComponent.tStop = None
@@ -202,25 +204,25 @@ while continueRoutine:
         win.timeOnFlip(instr_2D, 'tStartRefresh')  # time at next scr refresh
         instr_2D.setAutoDraw(True)
     
-    # *instr_kb* updates
+    # *instr_2D_kb* updates
     waitOnFlip = False
-    if instr_kb.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+    if instr_2D_kb.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
         # keep track of start time/frame for later
-        instr_kb.frameNStart = frameN  # exact frame index
-        instr_kb.tStart = t  # local t and not account for scr refresh
-        instr_kb.tStartRefresh = tThisFlipGlobal  # on global time
-        win.timeOnFlip(instr_kb, 'tStartRefresh')  # time at next scr refresh
-        instr_kb.status = STARTED
+        instr_2D_kb.frameNStart = frameN  # exact frame index
+        instr_2D_kb.tStart = t  # local t and not account for scr refresh
+        instr_2D_kb.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(instr_2D_kb, 'tStartRefresh')  # time at next scr refresh
+        instr_2D_kb.status = STARTED
         # keyboard checking is just starting
         waitOnFlip = True
-        win.callOnFlip(instr_kb.clock.reset)  # t=0 on next screen flip
-        win.callOnFlip(instr_kb.clearEvents, eventType='keyboard')  # clear events on next screen flip
-    if instr_kb.status == STARTED and not waitOnFlip:
-        theseKeys = instr_kb.getKeys(keyList=['space'], waitRelease=False)
-        _instr_kb_allKeys.extend(theseKeys)
-        if len(_instr_kb_allKeys):
-            instr_kb.keys = _instr_kb_allKeys[-1].name  # just the last key pressed
-            instr_kb.rt = _instr_kb_allKeys[-1].rt
+        win.callOnFlip(instr_2D_kb.clock.reset)  # t=0 on next screen flip
+        win.callOnFlip(instr_2D_kb.clearEvents, eventType='keyboard')  # clear events on next screen flip
+    if instr_2D_kb.status == STARTED and not waitOnFlip:
+        theseKeys = instr_2D_kb.getKeys(keyList=['space'], waitRelease=False)
+        _instr_2D_kb_allKeys.extend(theseKeys)
+        if len(_instr_2D_kb_allKeys):
+            instr_2D_kb.keys = _instr_2D_kb_allKeys[-1].name  # just the last key pressed
+            instr_2D_kb.rt = _instr_2D_kb_allKeys[-1].rt
             # a response ends the routine
             continueRoutine = False
     
@@ -248,19 +250,19 @@ for thisComponent in instructions_2DComponents:
 thisExp.addData('instr_2D.started', instr_2D.tStartRefresh)
 thisExp.addData('instr_2D.stopped', instr_2D.tStopRefresh)
 # check responses
-if instr_kb.keys in ['', [], None]:  # No response was made
-    instr_kb.keys = None
-thisExp.addData('instr_kb.keys',instr_kb.keys)
-if instr_kb.keys != None:  # we had a response
-    thisExp.addData('instr_kb.rt', instr_kb.rt)
-thisExp.addData('instr_kb.started', instr_kb.tStartRefresh)
-thisExp.addData('instr_kb.stopped', instr_kb.tStopRefresh)
+if instr_2D_kb.keys in ['', [], None]:  # No response was made
+    instr_2D_kb.keys = None
+thisExp.addData('instr_2D_kb.keys',instr_2D_kb.keys)
+if instr_2D_kb.keys != None:  # we had a response
+    thisExp.addData('instr_2D_kb.rt', instr_2D_kb.rt)
+thisExp.addData('instr_2D_kb.started', instr_2D_kb.tStartRefresh)
+thisExp.addData('instr_2D_kb.stopped', instr_2D_kb.tStopRefresh)
 thisExp.nextEntry()
 # the Routine "instructions_2D" was not non-slip safe, so reset the non-slip timer
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials_2D = data.TrialHandler(nReps=0.0, method='random', 
+trials_2D = data.TrialHandler(nReps=1.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials_2D')
@@ -289,7 +291,7 @@ for thisTrials_2D in trials_2D:
     img_wrong_path = 'Stimuli_2d/wrong' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des falschen 2D-Bildes
     img_target_path = 'Stimuli_2d/target' + str(img_index[trials_2D.thisN]) + '.png' # Pfad des Target-Bildes
     # keep track of which components have finished
-    ITI_Fixation_2DComponents = [fix_point, fix_point_ISI]
+    ITI_Fixation_2DComponents = [fix_point_2D, fix_point_2D_ISI]
     for thisComponent in ITI_Fixation_2DComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -312,38 +314,38 @@ for thisTrials_2D in trials_2D:
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
-        # *fix_point* updates
-        if fix_point.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # *fix_point_2D* updates
+        if fix_point_2D.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            fix_point.frameNStart = frameN  # exact frame index
-            fix_point.tStart = t  # local t and not account for scr refresh
-            fix_point.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(fix_point, 'tStartRefresh')  # time at next scr refresh
-            fix_point.setAutoDraw(True)
-        if fix_point.status == STARTED:
+            fix_point_2D.frameNStart = frameN  # exact frame index
+            fix_point_2D.tStart = t  # local t and not account for scr refresh
+            fix_point_2D.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(fix_point_2D, 'tStartRefresh')  # time at next scr refresh
+            fix_point_2D.setAutoDraw(True)
+        if fix_point_2D.status == STARTED:
             # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > fix_point.tStartRefresh + 1.0-frameTolerance:
+            if tThisFlipGlobal > fix_point_2D.tStartRefresh + 1.0-frameTolerance:
                 # keep track of stop time/frame for later
-                fix_point.tStop = t  # not accounting for scr refresh
-                fix_point.frameNStop = frameN  # exact frame index
-                win.timeOnFlip(fix_point, 'tStopRefresh')  # time at next scr refresh
-                fix_point.setAutoDraw(False)
-        # *fix_point_ISI* period
-        if fix_point_ISI.status == NOT_STARTED and t >= 0-frameTolerance:
+                fix_point_2D.tStop = t  # not accounting for scr refresh
+                fix_point_2D.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(fix_point_2D, 'tStopRefresh')  # time at next scr refresh
+                fix_point_2D.setAutoDraw(False)
+        # *fix_point_2D_ISI* period
+        if fix_point_2D_ISI.status == NOT_STARTED and t >= 0-frameTolerance:
             # keep track of start time/frame for later
-            fix_point_ISI.frameNStart = frameN  # exact frame index
-            fix_point_ISI.tStart = t  # local t and not account for scr refresh
-            fix_point_ISI.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(fix_point_ISI, 'tStartRefresh')  # time at next scr refresh
-            fix_point_ISI.start(1)
-        elif fix_point_ISI.status == STARTED:  # one frame should pass before updating params and completing
-            # updating other components during *fix_point_ISI*
+            fix_point_2D_ISI.frameNStart = frameN  # exact frame index
+            fix_point_2D_ISI.tStart = t  # local t and not account for scr refresh
+            fix_point_2D_ISI.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(fix_point_2D_ISI, 'tStartRefresh')  # time at next scr refresh
+            fix_point_2D_ISI.start(1)
+        elif fix_point_2D_ISI.status == STARTED:  # one frame should pass before updating params and completing
+            # updating other components during *fix_point_2D_ISI*
             img_correct.setImage(img_correct_path)
             img_target.setImage(img_target_path)
             img_wrong.setImage(img_wrong_path)
             # component updates done
-            fix_point_ISI.complete()  # finish the static period
-            fix_point_ISI.tStop = fix_point_ISI.tStart + 1  # record stop time
+            fix_point_2D_ISI.complete()  # finish the static period
+            fix_point_2D_ISI.tStop = fix_point_2D_ISI.tStart + 1  # record stop time
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -366,10 +368,10 @@ for thisTrials_2D in trials_2D:
     for thisComponent in ITI_Fixation_2DComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    trials_2D.addData('fix_point.started', fix_point.tStartRefresh)
-    trials_2D.addData('fix_point.stopped', fix_point.tStopRefresh)
-    trials_2D.addData('fix_point_ISI.started', fix_point_ISI.tStart)
-    trials_2D.addData('fix_point_ISI.stopped', fix_point_ISI.tStop)
+    trials_2D.addData('fix_point_2D.started', fix_point_2D.tStartRefresh)
+    trials_2D.addData('fix_point_2D.stopped', fix_point_2D.tStopRefresh)
+    trials_2D.addData('fix_point_2D_ISI.started', fix_point_2D_ISI.tStart)
+    trials_2D.addData('fix_point_2D_ISI.stopped', fix_point_2D_ISI.tStop)
     
     # ------Prepare to start Routine "trial_2D"-------
     continueRoutine = True
@@ -573,14 +575,17 @@ for thisTrials_2D in trials_2D:
     trials_2D.addData('img_wrong.stopped', img_wrong.tStopRefresh)
     thisExp.nextEntry()
     
-# completed 0.0 repeats of 'trials_2D'
+# completed 1.0 repeats of 'trials_2D'
 
 
 # ------Prepare to start Routine "instructions_3D"-------
 continueRoutine = True
 # update component parameters for each repeat
+instr_3D_kb.keys = []
+instr_3D_kb.rt = []
+_instr_3D_kb_allKeys = []
 # keep track of which components have finished
-instructions_3DComponents = [text]
+instructions_3DComponents = [instr_3D, instr_3D_kb]
 for thisComponent in instructions_3DComponents:
     thisComponent.tStart = None
     thisComponent.tStop = None
@@ -603,14 +608,36 @@ while continueRoutine:
     frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
     # update/draw components on each frame
     
-    # *text* updates
-    if text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+    # *instr_3D* updates
+    if instr_3D.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
         # keep track of start time/frame for later
-        text.frameNStart = frameN  # exact frame index
-        text.tStart = t  # local t and not account for scr refresh
-        text.tStartRefresh = tThisFlipGlobal  # on global time
-        win.timeOnFlip(text, 'tStartRefresh')  # time at next scr refresh
-        text.setAutoDraw(True)
+        instr_3D.frameNStart = frameN  # exact frame index
+        instr_3D.tStart = t  # local t and not account for scr refresh
+        instr_3D.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(instr_3D, 'tStartRefresh')  # time at next scr refresh
+        instr_3D.setAutoDraw(True)
+    
+    # *instr_3D_kb* updates
+    waitOnFlip = False
+    if instr_3D_kb.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # keep track of start time/frame for later
+        instr_3D_kb.frameNStart = frameN  # exact frame index
+        instr_3D_kb.tStart = t  # local t and not account for scr refresh
+        instr_3D_kb.tStartRefresh = tThisFlipGlobal  # on global time
+        win.timeOnFlip(instr_3D_kb, 'tStartRefresh')  # time at next scr refresh
+        instr_3D_kb.status = STARTED
+        # keyboard checking is just starting
+        waitOnFlip = True
+        win.callOnFlip(instr_3D_kb.clock.reset)  # t=0 on next screen flip
+        win.callOnFlip(instr_3D_kb.clearEvents, eventType='keyboard')  # clear events on next screen flip
+    if instr_3D_kb.status == STARTED and not waitOnFlip:
+        theseKeys = instr_3D_kb.getKeys(keyList=['space'], waitRelease=False)
+        _instr_3D_kb_allKeys.extend(theseKeys)
+        if len(_instr_3D_kb_allKeys):
+            instr_3D_kb.keys = _instr_3D_kb_allKeys[-1].name  # just the last key pressed
+            instr_3D_kb.rt = _instr_3D_kb_allKeys[-1].rt
+            # a response ends the routine
+            continueRoutine = False
     
     # check for quit (typically the Esc key)
     if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -633,8 +660,17 @@ while continueRoutine:
 for thisComponent in instructions_3DComponents:
     if hasattr(thisComponent, "setAutoDraw"):
         thisComponent.setAutoDraw(False)
-thisExp.addData('text.started', text.tStartRefresh)
-thisExp.addData('text.stopped', text.tStopRefresh)
+thisExp.addData('instr_3D.started', instr_3D.tStartRefresh)
+thisExp.addData('instr_3D.stopped', instr_3D.tStopRefresh)
+# check responses
+if instr_3D_kb.keys in ['', [], None]:  # No response was made
+    instr_3D_kb.keys = None
+thisExp.addData('instr_3D_kb.keys',instr_3D_kb.keys)
+if instr_3D_kb.keys != None:  # we had a response
+    thisExp.addData('instr_3D_kb.rt', instr_3D_kb.rt)
+thisExp.addData('instr_3D_kb.started', instr_3D_kb.tStartRefresh)
+thisExp.addData('instr_3D_kb.stopped', instr_3D_kb.tStopRefresh)
+thisExp.nextEntry()
 # the Routine "instructions_3D" was not non-slip safe, so reset the non-slip timer
 routineTimer.reset()
 
