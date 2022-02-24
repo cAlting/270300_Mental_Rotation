@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 24, 2022, at 17:51
+    on Februar 24, 2022, at 18:32
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -99,7 +99,7 @@ instr_2D_kb = keyboard.Keyboard()
 ITI_Fixation_2DClock = core.Clock()
 fix_point_2D = visual.ShapeStim(
     win=win, name='fix_point_2D',units='pix', 
-    size=(10, 10), vertices='circle',
+    size=(5, 5), vertices='circle',
     ori=0.0, pos=(0, 0),
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=-1.0, interpolate=True)
@@ -165,7 +165,7 @@ instr_3D_kb = keyboard.Keyboard()
 ITI_Fixation_3DClock = core.Clock()
 fix_point_3D = visual.ShapeStim(
     win=win, name='fix_point_3D',units='pix', 
-    size=(10, 10), vertices='circle',
+    size=(5, 5), vertices='circle',
     ori=0.0, pos=(0, 0),
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=0.0, interpolate=True)
@@ -306,7 +306,14 @@ img_files_complete = [*img_files_rel_1_sorted, *img_files_rel_2_sorted]
 same_key = 'up'
 diff_key = 'down'
 
+# Liste mit erlaubten Keys (die Keyboard-Komponente benötigt die
+# erlaubten Keys als Liste. Man kann nicht einfach die Variablennamen
+# eintragen)
 allowed_keys = [same_key, diff_key]
+
+# Liste mit 0 für korrekte und 1 für falsche Antworten
+# Wird unter End Routine dieser Code Komponente verwendet
+correct_keys = []
 stim_3D = visual.ImageStim(
     win=win,
     name='stim_3D', units='pix', 
@@ -319,6 +326,21 @@ key_resp_3D = keyboard.Keyboard()
 
 # Initialize components for Routine "feedback_3D"
 feedback_3DClock = core.Clock()
+# Festlegen, wie viele der letzten Trials bei Berechnung der korrekten
+# Trials für Feedback-Message berücksichtigt werden sollen
+# n_Trials_Feedback letzter Trials
+# n_Trials_Feedback: Anzahl letzter Trials, die für Berechnung berücksichtigt
+# werden sollen
+n_Trials_Feedback = 10
+
+
+feedback_text = visual.TextStim(win=win, name='feedback_text',
+    text='',
+    font='Open Sans',
+    units='norm', pos=(0, 0), height=0.2, wrapWidth=None, ori=0.0, 
+    color='white', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=-1.0);
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
@@ -421,7 +443,7 @@ thisExp.nextEntry()
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials_2D = data.TrialHandler(nReps=1.0, method='random', 
+trials_2D = data.TrialHandler(nReps=0.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials_2D')
@@ -734,7 +756,7 @@ for thisTrials_2D in trials_2D:
     trials_2D.addData('img_wrong.stopped', img_wrong.tStopRefresh)
     thisExp.nextEntry()
     
-# completed 1.0 repeats of 'trials_2D'
+# completed 0.0 repeats of 'trials_2D'
 
 
 # ------Prepare to start Routine "instructions_3D"-------
@@ -834,7 +856,7 @@ thisExp.nextEntry()
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials_3D = data.TrialHandler(nReps=384.0, method='random', 
+trials_3D = data.TrialHandler(nReps=384.0, method='sequential', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials_3D')
@@ -1078,6 +1100,9 @@ for thisTrials_3D in trials_3D:
     # sowie der Richtigkeit der Antwort
     thisExp.addData('corrAns', corrAns)
     thisExp.addData('stim_path', img_files_complete[trials_3D.thisN])
+    
+    # Loggen der Antworten
+    correct_keys.append(corrAns)
     trials_3D.addData('stim_3D.started', stim_3D.tStartRefresh)
     trials_3D.addData('stim_3D.stopped', stim_3D.tStopRefresh)
     # check responses
@@ -1091,9 +1116,25 @@ for thisTrials_3D in trials_3D:
     
     # ------Prepare to start Routine "feedback_3D"-------
     continueRoutine = True
+    routineTimer.add(3.000000)
     # update component parameters for each repeat
+    # Anpassen der Feedback Message nach 10 Trials
+    # Falls kein Feedback angezeigt werden soll (da aktueller
+    # Trial kein Vielfaches von 10) UND der aktuelle Trial nicht der 1. ist
+    # , wird die Routine übersprungen und der nächste Trial startet.
+    # Der Check, ob es sich um den 1. Trial handelt, ist notwendig, da PsychoPy
+    # sonst im 1. Trial schon eine Feedback-Nachricht anzeigt
+    # (0 Modulo 10 = 0)
+    if trials_3D.thisN % n_Trials_Feedback == 0 and trials_3D.thisN > 0:
+        nCorr = sum(correct_keys[-n_Trials_Feedback:])
+        msg = str(nCorr) + ' der letzten ' + str(n_Trials_Feedback) + ' korrekt.'
+    else:
+        msg = ''
+        continueRoutine = False
+    
+    feedback_text.setText(msg)
     # keep track of which components have finished
-    feedback_3DComponents = []
+    feedback_3DComponents = [feedback_text]
     for thisComponent in feedback_3DComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -1108,13 +1149,30 @@ for thisTrials_3D in trials_3D:
     frameN = -1
     
     # -------Run Routine "feedback_3D"-------
-    while continueRoutine:
+    while continueRoutine and routineTimer.getTime() > 0:
         # get current time
         t = feedback_3DClock.getTime()
         tThisFlip = win.getFutureFlipTime(clock=feedback_3DClock)
         tThisFlipGlobal = win.getFutureFlipTime(clock=None)
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
+        
+        # *feedback_text* updates
+        if feedback_text.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            feedback_text.frameNStart = frameN  # exact frame index
+            feedback_text.tStart = t  # local t and not account for scr refresh
+            feedback_text.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(feedback_text, 'tStartRefresh')  # time at next scr refresh
+            feedback_text.setAutoDraw(True)
+        if feedback_text.status == STARTED:
+            # is it time to stop? (based on global clock, using actual start)
+            if tThisFlipGlobal > feedback_text.tStartRefresh + 3-frameTolerance:
+                # keep track of stop time/frame for later
+                feedback_text.tStop = t  # not accounting for scr refresh
+                feedback_text.frameNStop = frameN  # exact frame index
+                win.timeOnFlip(feedback_text, 'tStopRefresh')  # time at next scr refresh
+                feedback_text.setAutoDraw(False)
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -1137,8 +1195,8 @@ for thisTrials_3D in trials_3D:
     for thisComponent in feedback_3DComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    # the Routine "feedback_3D" was not non-slip safe, so reset the non-slip timer
-    routineTimer.reset()
+    trials_3D.addData('feedback_text.started', feedback_text.tStartRefresh)
+    trials_3D.addData('feedback_text.stopped', feedback_text.tStopRefresh)
     thisExp.nextEntry()
     
 # completed 384.0 repeats of 'trials_3D'
