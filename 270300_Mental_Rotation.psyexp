@@ -234,7 +234,7 @@
         <Param name="name" updates="None" val="img_target" valType="code"/>
         <Param name="opacity" updates="constant" val="" valType="num"/>
         <Param name="ori" updates="constant" val="0" valType="num"/>
-        <Param name="pos" updates="set every repeat" val="(0, 139)" valType="list"/>
+        <Param name="pos" updates="constant" val="(0, 139)" valType="list"/>
         <Param name="saveStartStop" updates="None" val="True" valType="bool"/>
         <Param name="size" updates="constant" val="(300, 278)" valType="list"/>
         <Param name="startEstim" updates="None" val="0" valType="code"/>
