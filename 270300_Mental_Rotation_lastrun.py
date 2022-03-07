@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2021.2.3),
-    on Februar 24, 2022, at 18:32
+    on März 07, 2022, at 21:23
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -120,8 +120,6 @@ img_index = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 # verwendet wird, erhält man eine zufällige Reihenfolge der Bilddateien,
 # da die img_index-Liste vorher geshuffelt wurde
 random.shuffle(img_index)
-
-print(os.path.dirname(os.path.realpath(sys.argv[0])))
 trial_2D_mouse = event.Mouse(win=win)
 x, y = [None, None]
 trial_2D_mouse.mouseClock = core.Clock()
@@ -137,7 +135,7 @@ img_target = visual.ImageStim(
     win=win,
     name='img_target', units='pix', 
     image='sin', mask=None,
-    ori=0.0, pos=[0,0], size=(300, 278),
+    ori=0.0, pos=(0, 139), size=(300, 278),
     color=[1,1,1], colorSpace='rgb', opacity=None,
     flipHoriz=False, flipVert=False,
     texRes=128.0, interpolate=True, depth=-3.0)
@@ -295,7 +293,7 @@ img_files_rel_2_sorted = natural_sorted(img_files_rel_2)
 # Zusammenführen ("Concatenation") der Listen
 # Diese enthält nun alle 2x192 = 384 relativen Pfade zu den Stimuli in der Art, dass
 # für Gruppe A zunächst alle Pfade der Bilder im easy-Ordner, dann alle Pfade der Bilder 
-# im hard-Ordner folgen. Für Gruppe B verhält es sich entsprechend umgekehrt
+# im hard-Ordner folgen. Für Gruppe B verhält es sich entsprechend umgekehrt.
 img_files_complete = [*img_files_rel_1_sorted, *img_files_rel_2_sorted]
 
 # Festlegen der Answer-Keys
@@ -443,7 +441,7 @@ thisExp.nextEntry()
 routineTimer.reset()
 
 # set up handler to look after randomisation of conditions etc
-trials_2D = data.TrialHandler(nReps=0.0, method='random', 
+trials_2D = data.TrialHandler(nReps=15.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials_2D')
@@ -582,7 +580,6 @@ for thisTrials_2D in trials_2D:
     gotValidClick = False  # until a click is received
     trial_2D_mouse.mouseClock.reset()
     img_correct.setPos((x_pos_correct, -139))
-    img_target.setPos((0, 139))
     img_wrong.setPos((-x_pos_correct, -139))
     # keep track of which components have finished
     trial_2DComponents = [trial_2D_mouse, img_correct, img_target, img_wrong]
@@ -731,7 +728,7 @@ for thisTrials_2D in trials_2D:
     thisExp.addData('x_pos_wrong', -x_pos_correct)
     
     # Speichern der verwendeten Bilddateien
-    # (in den csv-Dateien kann man anhand der Zahlern
+    # (in den csv-Dateien kann man anhand der Zahlen
     # der verwendeten Bilder sehen, dass die Stimuli
     # randomisiert präsentiert werden)
     thisExp.addData('img_correct', img_correct_path)
@@ -756,7 +753,7 @@ for thisTrials_2D in trials_2D:
     trials_2D.addData('img_wrong.stopped', img_wrong.tStopRefresh)
     thisExp.nextEntry()
     
-# completed 0.0 repeats of 'trials_2D'
+# completed 15.0 repeats of 'trials_2D'
 
 
 # ------Prepare to start Routine "instructions_3D"-------
@@ -1097,12 +1094,39 @@ for thisTrials_3D in trials_3D:
             corrAns = 0
     
     # Loggen des relativen Pfades des aktuellen Stimulus
-    # sowie der Richtigkeit der Antwort
+    # sowie der Richtigkeit der Antwort (werden in separate Spalten
+    # der Experimental-csv-Datei geschrieben)
     thisExp.addData('corrAns', corrAns)
     thisExp.addData('stim_path', img_files_complete[trials_3D.thisN])
     
-    # Loggen der Antworten
+    # Loggen der Antworten (diese Liste wird zur Berechnung der Anzahl korrekter Antworten
+    # in der feedback_code-Komponente der feedback_3D-Routine verwendet)
     correct_keys.append(corrAns)
+    
+    # Extraktion des Rotationswinkels des Vergleichsstimulus
+    # So kann man später graphisch die Reaktionszeit gegen den Rotationswinkel darstellen.
+    # Zunächst wird der relative Pfad des aktuell verwendeten Stimulus (z.B. "Stimuli_3D\easy\07_50.jpg")
+    # am Unterstrich "_" getrennt ('Stimuli', '3D\easy\', '50.jpg) und in der Variable
+    # splt_path gespeichert.
+    # Wenn im Pfad des im akuellen Trial verwendeten Stimulus kein "R" vorkommt (deckungsgleiche Stimuli),
+    # wird das letzte Elemente der Liste splt_path (z.B. 50.jpg) am Punkt "." getrennt. 
+    # Das vorletzte Element des Resultats (splt_path[-1].split(".")[-2]) ist dann der Rotationswinkel.
+    # Wenn ein "R" im relativen Pfad vorkommt, entfällt der letzte Schritt (Split des letzten
+    # Elementes der Liste splt_path beim Doppelpunkt und Verwendung des vorletzten Elementes des Resultates).
+    # Hier ist das vorletzte Element der Variable splt_path der Rotationswinkel.
+    splt_path = img_files_complete[trials_3D.thisN].split("_")
+    
+    if "R" not in img_files_complete[trials_3D.thisN]:
+        rotation_degree = splt_path[-1].split(".")[-2]
+        same_or_diff = "same"
+    else:
+        rotation_degree = splt_path[-2]
+        same_or_diff = "diff"
+    
+    # Fügt den Rotationswinkel des Vergleichsstimulus den Experimentaldaten hinzu
+    thisExp.addData('Rotation_Degree', rotation_degree)
+    thisExp.addData('Same_or_Diff', same_or_diff)
+    
     trials_3D.addData('stim_3D.started', stim_3D.tStartRefresh)
     trials_3D.addData('stim_3D.stopped', stim_3D.tStopRefresh)
     # check responses
@@ -1120,18 +1144,15 @@ for thisTrials_3D in trials_3D:
     # update component parameters for each repeat
     # Anpassen der Feedback Message nach 10 Trials
     # Falls kein Feedback angezeigt werden soll (da aktueller
-    # Trial kein Vielfaches von 10) UND der aktuelle Trial nicht der 1. ist
-    # , wird die Routine übersprungen und der nächste Trial startet.
-    # Der Check, ob es sich um den 1. Trial handelt, ist notwendig, da PsychoPy
-    # sonst im 1. Trial schon eine Feedback-Nachricht anzeigt
-    # (0 Modulo 10 = 0)
-    if trials_3D.thisN % n_Trials_Feedback == 0 and trials_3D.thisN > 0:
+    # Trial kein Vielfaches von 10), wird die Routine übersprungen und der 
+    # nächste Trial startet. Da Indexing in Python bei 0 beginnt, muss für den
+    # Modulo-Operator zum aktuellen Trialindex 1 addiert werden
+    if (trials_3D.thisN+1) % n_Trials_Feedback == 0:
         nCorr = sum(correct_keys[-n_Trials_Feedback:])
         msg = str(nCorr) + ' der letzten ' + str(n_Trials_Feedback) + ' korrekt.'
     else:
         msg = ''
         continueRoutine = False
-    
     feedback_text.setText(msg)
     # keep track of which components have finished
     feedback_3DComponents = [feedback_text]
